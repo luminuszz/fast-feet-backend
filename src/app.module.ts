@@ -6,9 +6,17 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { GraphQLModule } from '@nestjs/graphql'
 import { APP_PIPE } from '@nestjs/core'
 import { ClassValidatorPipe } from './shared/pipes/classValidator.pipe'
+import { AuthModule } from './modules/auth/auth.module'
+import envVariables from './config/envVariables'
+import { ConfigModule } from '@nestjs/config'
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+      load: [envVariables],
+    }),
     UsersModule,
     TypeOrmModule.forRoot(),
     GraphQLModule.forRoot({
@@ -16,6 +24,7 @@ import { ClassValidatorPipe } from './shared/pipes/classValidator.pipe'
       playground: true,
       context: ({ req }) => ({ req }),
     }),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_PIPE, useClass: ClassValidatorPipe }],

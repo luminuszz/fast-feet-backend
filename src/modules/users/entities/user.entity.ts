@@ -1,6 +1,12 @@
 import { Field, ObjectType } from '@nestjs/graphql'
+
 import BaseEntity from 'src/shared/utils/base.entity'
 import { Column, Entity } from 'typeorm'
+
+export enum UserRole {
+  Admin = 'admin',
+  User = 'user',
+}
 
 @Entity('users')
 @ObjectType()
@@ -21,7 +27,11 @@ export class User extends BaseEntity {
   @Field({ nullable: false })
   password: string
 
-  @Column({ type: 'boolean', nullable: false, default: true })
+  @Column({
+    type: 'enum',
+    enum: UserRole,
+    default: UserRole.User,
+  })
   @Field({ nullable: false })
-  deliveryman: boolean
+  role: UserRole
 }

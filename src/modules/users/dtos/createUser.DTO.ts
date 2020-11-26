@@ -1,11 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql'
-import {
-  IsString,
-  IsEmail,
-  IsNotEmpty,
-  Length,
-  IsBoolean,
-} from 'class-validator'
+import { IsString, IsEmail, IsNotEmpty, Length } from 'class-validator'
+import { UserRole } from '../entities/user.entity'
 
 @InputType()
 export class CreateUserDTO {
@@ -30,7 +25,6 @@ export class CreateUserDTO {
   cpf: string
 
   @IsNotEmpty()
-  @IsBoolean()
   @Field()
-  deliveryman: boolean
+  role: UserRole
 }
