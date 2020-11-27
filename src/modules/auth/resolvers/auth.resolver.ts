@@ -12,7 +12,6 @@ export class AuthResolver {
     @Args('args') { cpf, password }: ValidUserDTO
   ): Promise<LoginReturn> {
     const values = await this.authService.login({ cpf, password })
-
     return values
   }
 }

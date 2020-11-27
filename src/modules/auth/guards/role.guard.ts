@@ -3,6 +3,8 @@ import { Reflector } from '@nestjs/core'
 import { Observable } from 'rxjs'
 import { ROLES_KEY_TOKEN } from '../decorators/role.decorator'
 
+import { GqlExecutionContext } from '@nestjs/graphql'
+
 @Injectable()
 export class RoleGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
@@ -16,5 +18,13 @@ export class RoleGuard implements CanActivate {
     )
 
     if (!currentRole) return true
+
+    const ctx = GqlExecutionContext.create(context)
+
+    console.log(ctx.getContext().req.user)
+
+    return true
+
+    //  return currentRole === user.role
   }
 }

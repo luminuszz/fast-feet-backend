@@ -7,7 +7,6 @@ import { Request } from 'express'
 export class GqlAuthGuard extends AuthGuard('jwt') {
   public getRequest(context: ExecutionContext): Request {
     const gqlContext = GqlExecutionContext.create(context)
-
     return gqlContext.getContext<{ req: Request }>().req
   }
 }
