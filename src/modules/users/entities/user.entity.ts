@@ -1,7 +1,8 @@
 import { Field, ObjectType } from '@nestjs/graphql'
+import { Deliveries } from 'src/modules/deliveries/entities/deliveries.entity'
 
 import BaseEntity from 'src/shared/utils/base.entity'
-import { Column, Entity } from 'typeorm'
+import { Column, Entity, OneToMany } from 'typeorm'
 
 export enum UserRole {
   Admin = 'admin',
@@ -34,4 +35,7 @@ export class User extends BaseEntity {
   })
   @Field({ nullable: false })
   role: UserRole
+
+  @OneToMany(() => Deliveries, deliveries => deliveries.deliveryman)
+  deliveries: Deliveries[]
 }

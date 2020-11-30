@@ -9,6 +9,7 @@ import { ClassValidatorPipe } from './shared/pipes/classValidator.pipe'
 import { AuthModule } from './modules/auth/auth.module'
 import envVariables from './config/envVariables'
 import { ConfigModule } from '@nestjs/config'
+import { DeliveriesModule } from './modules/deliveries/deliveries.module'
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { ConfigModule } from '@nestjs/config'
       context: ({ req }) => ({ req }),
     }),
     AuthModule,
+    DeliveriesModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_PIPE, useClass: ClassValidatorPipe }],

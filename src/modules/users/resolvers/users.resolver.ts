@@ -13,7 +13,6 @@ export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
   @Query(() => [User])
-  @Role('Admin')
   public async getAllUsers(): Promise<User[]> {
     const users = await this.usersService.getAllUsers()
 
