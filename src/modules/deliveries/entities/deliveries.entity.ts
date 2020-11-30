@@ -1,9 +1,10 @@
-import { Field } from '@nestjs/graphql'
+import { Field, ObjectType } from '@nestjs/graphql'
 import { User } from 'src/modules/users/entities/user.entity'
 import BaseEntity from 'src/shared/utils/base.entity'
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
 
 @Entity('deliveries')
+@ObjectType()
 export class Deliveries extends BaseEntity {
   @Column({ name: 'product_name', type: 'varchar', nullable: false })
   @Field({ nullable: false })
@@ -34,26 +35,31 @@ export class Deliveries extends BaseEntity {
     type: 'timestamp with time zone',
     nullable: true,
   })
-  @Field({ nullable: false })
+  @Field({ nullable: true })
   canceledAt: Date
 
   @Column({
     name: 'start_date',
     type: 'timestamp with time zone',
-    nullable: false,
+    nullable: true,
   })
-  @Field({ nullable: false })
+  @Field({ nullable: true })
   startDate: Date
 
   @Column({
     name: 'end_date',
     type: 'timestamp with time zone',
-    nullable: false,
+    nullable: true,
   })
   @Field({ nullable: true })
   endDate: Date
 
-  @ManyToOne(() => User, user => user.deliveries)
+  @Column({ nullable: true, type: 'varchar' })
+  @Field({ nullable: true })
+  signatureId: string
+
+  @ManyToOne(() => User, user => user.deliveries, { cascade: true })
   @JoinColumn({ name: 'deliveryman_id' })
+  @Field(() => User)
   deliveryman: User
 }
