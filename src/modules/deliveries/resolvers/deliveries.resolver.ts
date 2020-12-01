@@ -1,7 +1,7 @@
 import { UseGuards } from '@nestjs/common'
 import { Args, Mutation, Resolver, Query } from '@nestjs/graphql'
 import { GqlAuthGuard } from 'src/modules/auth/guards/gqlAuth.guard'
-import { DeliveriesService } from '../deliveries.service'
+import { DeliveriesService } from '../services/deliveries.service'
 import { createDeliveryInputDTO } from '../dtos/createDeliver.dto'
 import { Deliveries } from '../entities/deliveries.entity'
 

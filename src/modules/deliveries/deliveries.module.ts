@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { DeliveriesService } from './deliveries.service'
+import { DeliveriesService } from './services/deliveries.service'
 import { DeliveriesRepository } from './repositories/deliveries.repository'
 import { DeliveriesResolver } from './resolvers/deliveries.resolver'
 

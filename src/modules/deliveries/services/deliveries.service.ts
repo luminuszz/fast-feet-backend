@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common'
-import { createDeliveryInputDTO } from './dtos/createDeliver.dto'
-import { Deliveries } from './entities/deliveries.entity'
-import { DeliveriesRepository } from './repositories/deliveries.repository'
+import { AcceptDeliveryDTO } from '../dtos/acceptDelivery.dto'
+import { createDeliveryInputDTO } from '../dtos/createDeliver.dto'
+import { Deliveries } from '../entities/deliveries.entity'
+import { DeliveriesRepository } from '../repositories/deliveries.repository'
 
 @Injectable()
 export class DeliveriesService {
@@ -20,4 +21,9 @@ export class DeliveriesService {
 
     return deliveries
   }
+
+  public async acceptDelivery({
+    deliveryId,
+    deliveryManId,
+  }: AcceptDeliveryDTO): Promise<void> {}
 }
