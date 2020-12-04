@@ -58,8 +58,8 @@ export class Deliveries extends BaseEntity {
   @Field({ nullable: true })
   signatureId: string
 
-  @ManyToOne(() => User, user => user.deliveries, { cascade: true })
+  @ManyToOne(() => User, user => user.deliveries, { eager: true })
   @JoinColumn({ name: 'deliveryman_id' })
-  @Field(() => User)
+  @Field(() => User, { nullable: true })
   deliveryman: User
 }

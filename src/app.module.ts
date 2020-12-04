@@ -4,12 +4,13 @@ import { AppService } from './app.service'
 import { UsersModule } from './modules/users/users.module'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { GraphQLModule } from '@nestjs/graphql'
-import { APP_PIPE } from '@nestjs/core'
+import { APP_FILTER, APP_PIPE } from '@nestjs/core'
 import { ClassValidatorPipe } from './shared/pipes/classValidator.pipe'
 import { AuthModule } from './modules/auth/auth.module'
 import envVariables from './config/envVariables'
 import { ConfigModule } from '@nestjs/config'
 import { DeliveriesModule } from './modules/deliveries/deliveries.module'
+import { formatterErrors } from './shared/errors/exeption.filter'
 
 @Module({
   imports: [
@@ -24,7 +25,9 @@ import { DeliveriesModule } from './modules/deliveries/deliveries.module'
       autoSchemaFile: true,
       playground: true,
       context: ({ req }) => ({ req }),
+      formatError: formatterErrors,
     }),
+
     AuthModule,
     DeliveriesModule,
   ],

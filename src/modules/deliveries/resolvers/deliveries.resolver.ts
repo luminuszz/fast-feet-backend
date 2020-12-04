@@ -1,9 +1,12 @@
-import { UseGuards } from '@nestjs/common'
+import { ParseUUIDPipe, UseGuards } from '@nestjs/common'
 import { Args, Mutation, Resolver, Query } from '@nestjs/graphql'
 import { GqlAuthGuard } from 'src/modules/auth/guards/gqlAuth.guard'
 import { DeliveriesService } from '../services/deliveries.service'
 import { createDeliveryInputDTO } from '../dtos/createDeliver.dto'
 import { Deliveries } from '../entities/deliveries.entity'
+import { uuid } from 'uuidv4'
+import { UserRequest } from 'src/modules/auth/decorators/user.decorator'
+import { User } from 'src/modules/users/entities/user.entity'
 
 @Resolver(() => Deliveries)
 @UseGuards(GqlAuthGuard)
@@ -24,5 +27,18 @@ export class DeliveriesResolver {
     const deliveries = await this.deliveryService.getAllDeliveries()
 
     return deliveries
+  }
+
+  @Mutation(() => Deliveries)
+  public async acceptDelivery(
+    @Args('deliveryId', new ParseUUIDPipe()) deliveryId: string,
+    @UserRequest() user: User
+  ): Promise<Deliveries> {
+    const accept = await this.deliveryService.acceptDelivery({
+      deliveryManId: user.id,
+      deliveryId,
+    })
+
+    return accept
   }
 }

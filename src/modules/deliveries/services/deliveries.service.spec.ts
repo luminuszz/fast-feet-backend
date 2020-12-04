@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing'
 import { DeliveriesService } from './deliveries.service'
 import { DeliveriesRepository } from '../repositories/mock/deliveries.mock.repository'
 
-describe('Teste Delivires Service', () => {
+describe('Teste Delivers Service', () => {
   let deliveriesService: DeliveriesService
 
   beforeEach(async () => {
@@ -17,4 +17,6 @@ describe('Teste Delivires Service', () => {
     }).compile()
     deliveriesService = moduleRef.get<DeliveriesService>(DeliveriesService)
   })
+
+  it('should be able to accept the delivery', () => {})
 })

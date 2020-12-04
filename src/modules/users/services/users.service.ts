@@ -23,6 +23,18 @@ export class UsersService {
     const newUser = this.usersRepository.createUser({
       ...data,
       password: hash,
+      role: UserRole.Admin,
+    })
+
+    return newUser
+  }
+
+  public async createDeliveryMan(data: CreateUserDTO): Promise<User> {
+    const hash = await this.hashService.createHash(data.password)
+
+    const newUser = this.usersRepository.createUser({
+      ...data,
+      password: hash,
       role: UserRole.User,
     })
 
