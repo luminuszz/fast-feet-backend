@@ -1,4 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql'
+import { Expose } from 'class-transformer'
+import { join } from 'path'
 import { User } from 'src/modules/users/entities/user.entity'
 import BaseEntity from 'src/shared/utils/base.entity'
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
@@ -62,4 +64,20 @@ export class Deliveries extends BaseEntity {
   @JoinColumn({ name: 'deliveryman_id' })
   @Field(() => User, { nullable: true })
   deliveryman: User
+
+  @Expose({ name: 'signatureImage' })
+  @Field({ nullable: true })
+  public get signatureImage(): string {
+    if (this.signatureId) {
+      const pathImage = join(
+        process.env.STATIC_URL,
+        'files',
+        'images',
+        'signatures',
+        this.signatureId
+      )
+
+      return pathImage
+    }
+  }
 }

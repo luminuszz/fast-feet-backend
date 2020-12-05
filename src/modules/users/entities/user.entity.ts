@@ -1,4 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql'
+import { Exclude } from 'class-transformer'
 import { Deliveries } from 'src/modules/deliveries/entities/deliveries.entity'
 
 import BaseEntity from 'src/shared/utils/base.entity'
@@ -24,8 +25,8 @@ export class User extends BaseEntity {
   @Field({ nullable: false })
   cpf: string
 
+  @Exclude()
   @Column({ type: 'varchar', nullable: false })
-  @Field({ nullable: false })
   password: string
 
   @Column({

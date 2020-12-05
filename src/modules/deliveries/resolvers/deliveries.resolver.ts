@@ -4,9 +4,9 @@ import { GqlAuthGuard } from 'src/modules/auth/guards/gqlAuth.guard'
 import { DeliveriesService } from '../services/deliveries.service'
 import { createDeliveryInputDTO } from '../dtos/createDeliver.dto'
 import { Deliveries } from '../entities/deliveries.entity'
-import { uuid } from 'uuidv4'
 import { UserRequest } from 'src/modules/auth/decorators/user.decorator'
 import { User } from 'src/modules/users/entities/user.entity'
+import { FinishDeliveryDTO } from '../dtos/finishDelivery.dto'
 
 @Resolver(() => Deliveries)
 @UseGuards(GqlAuthGuard)
@@ -40,5 +40,19 @@ export class DeliveriesResolver {
     })
 
     return accept
+  }
+
+  @Mutation(() => Deliveries)
+  public async finishDelivery(
+    @Args('deliveryId', ParseUUIDPipe) deliveryId: string,
+    @UserRequest('id')
+    id: string
+  ): Promise<Deliveries> {
+    const response = await this.deliveryService.finishDelivery({
+      deliveryId,
+      deliveryManId: id,
+    })
+
+    return response
   }
 }

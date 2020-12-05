@@ -9,12 +9,19 @@ import { createDeliveryInputDTO } from '../dtos/createDeliver.dto'
 import { Deliveries } from '../entities/deliveries.entity'
 import { DeliveriesRepository } from '../repositories/deliveries.repository'
 import { getHours } from 'date-fns'
+import { UploadService } from 'src/shared/providers/upload/upload.service'
+
+interface IFinishDeliveryParams {
+  deliveryId: string
+  deliveryManId: string
+}
 
 @Injectable()
 export class DeliveriesService {
   constructor(
     private readonly deliversRepository: DeliveriesRepository,
-    private readonly usersService: UsersService
+    private readonly usersService: UsersService,
+    private readonly uploadService: UploadService
   ) {}
 
   public async createDelivery(
@@ -68,5 +75,50 @@ export class DeliveriesService {
     await this.deliversRepository.save(currentDelivery)
 
     return currentDelivery
+  }
+
+  public async finishDelivery({
+    deliveryId,
+    deliveryManId,
+  }: IFinishDeliveryParams): Promise<Deliveries> {
+    const foundedDelivery = await this.deliversRepository.findOne(deliveryId)
+
+    const foundedDeliveryMain = await this.usersService.findOneUser({
+      column: 'id',
+      value: deliveryManId,
+    })
+
+    if (!foundedDelivery || !foundedDeliveryMain) {
+      throw new BadRequestException('credentials not found')
+    }
+
+    if (!foundedDelivery.startDate) {
+      throw new UnauthorizedException('This delivery should to accept first')
+    }
+
+    foundedDelivery.endDate = new Date()
+
+    return foundedDelivery
+  }
+
+  // Upload
+
+  public async uploadSignatureImage(
+    fileName: string,
+    deliveryId: string
+  ): Promise<Deliveries> {
+    const foundedDelivery = await this.deliversRepository.findOne(deliveryId)
+
+    if (!foundedDelivery) {
+      throw new BadRequestException('Delivery, not found')
+    }
+
+    const filePath = await this.uploadService.saveFile(fileName)
+
+    foundedDelivery.signatureId = filePath
+
+    await this.deliversRepository.save(foundedDelivery)
+
+    return foundedDelivery
   }
 }
