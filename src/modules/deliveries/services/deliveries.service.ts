@@ -1,9 +1,14 @@
-import { BadRequestException, Injectable } from '@nestjs/common'
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common'
 import { UsersService } from 'src/modules/users/services/users.service'
 import { AcceptDeliveryDTO } from '../dtos/acceptDelivery.dto'
 import { createDeliveryInputDTO } from '../dtos/createDeliver.dto'
 import { Deliveries } from '../entities/deliveries.entity'
 import { DeliveriesRepository } from '../repositories/deliveries.repository'
+import { getHours } from 'date-fns'
 
 @Injectable()
 export class DeliveriesService {
@@ -30,6 +35,16 @@ export class DeliveriesService {
     deliveryId,
     deliveryManId,
   }: AcceptDeliveryDTO): Promise<Deliveries> {
+    const currentDate = new Date()
+
+    console.log(currentDate)
+
+    if (getHours(currentDate) < 8 || getHours(currentDate) > 12) {
+      throw new UnauthorizedException(
+        'You can only accept delivery from 8am to 12pm'
+      )
+    }
+
     const currentDelivery = await this.deliversRepository.findOne({
       where: { id: deliveryId },
     })
@@ -48,6 +63,7 @@ export class DeliveriesService {
     }
 
     currentDelivery.deliveryman = currentDeliveryMain
+    currentDelivery.startDate = currentDate
 
     await this.deliversRepository.save(currentDelivery)
 
