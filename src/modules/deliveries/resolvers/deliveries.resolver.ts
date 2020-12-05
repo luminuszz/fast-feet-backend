@@ -6,7 +6,6 @@ import { createDeliveryInputDTO } from '../dtos/createDeliver.dto'
 import { Deliveries } from '../entities/deliveries.entity'
 import { UserRequest } from 'src/modules/auth/decorators/user.decorator'
 import { User } from 'src/modules/users/entities/user.entity'
-import { FinishDeliveryDTO } from '../dtos/finishDelivery.dto'
 
 @Resolver(() => Deliveries)
 @UseGuards(GqlAuthGuard)

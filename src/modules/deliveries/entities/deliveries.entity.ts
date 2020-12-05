@@ -80,4 +80,10 @@ export class Deliveries extends BaseEntity {
       return pathImage
     }
   }
+
+  @Expose({ name: 'isDelivered' })
+  @Field()
+  public get isDelivered(): boolean {
+    return !!this.endDate
+  }
 }

@@ -98,6 +98,8 @@ export class DeliveriesService {
 
     foundedDelivery.endDate = new Date()
 
+    await this.deliversRepository.save(foundedDelivery)
+
     return foundedDelivery
   }
 
