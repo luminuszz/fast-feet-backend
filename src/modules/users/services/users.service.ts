@@ -106,4 +106,12 @@ export class UsersService {
 
     console.log(currentDeliveryMan)
   }
+
+  public async verifyNumberOfDeliveries(recipientId: string): Promise<boolean> {
+    const currentUser = await this.usersMongoRepository.findOne({
+      where: { recipientId },
+    })
+
+    return currentUser.numberOfDeliveries < 5
+  }
 }

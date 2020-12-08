@@ -11,6 +11,7 @@ import { ConfigModule } from '@nestjs/config'
 import { DeliveriesModule } from './modules/deliveries/deliveries.module'
 import { EventEmitterModule } from '@nestjs/event-emitter'
 import { mongoConnection, pgConnection } from './config/connections'
+import { ScheduleModule } from '@nestjs/schedule'
 import {
   configModule,
   eventEmitterConfig,
@@ -25,6 +26,7 @@ import {
     TypeOrmModule.forRoot(),
     GraphQLModule.forRoot(gqlModuleConfig),
     EventEmitterModule.forRoot(eventEmitterConfig),
+    ScheduleModule.forRoot(),
     UsersModule,
     AuthModule,
     DeliveriesModule,

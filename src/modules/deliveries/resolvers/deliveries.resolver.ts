@@ -6,12 +6,14 @@ import { createDeliveryInputDTO } from '../dtos/createDeliver.dto'
 import { Deliveries } from '../entities/deliveries.entity'
 import { UserRequest } from 'src/modules/auth/decorators/user.decorator'
 import { User } from 'src/modules/users/entities/user.entity'
+import { Auth } from 'src/modules/auth/decorators/auth.decorator'
 
 @Resolver(() => Deliveries)
 @UseGuards(GqlAuthGuard)
 export class DeliveriesResolver {
   constructor(private readonly deliveryService: DeliveriesService) {}
 
+  @Auth('jwt')
   @Mutation(() => Deliveries)
   public async createDelivery(
     @Args('createDelivery') data: createDeliveryInputDTO
@@ -21,9 +23,22 @@ export class DeliveriesResolver {
     return newDelivery
   }
 
+  @Auth('jwt')
   @Query(() => [Deliveries])
   public async getAllDelivery(): Promise<Deliveries[]> {
     const deliveries = await this.deliveryService.getAllDeliveries()
+
+    return deliveries
+  }
+
+  @Auth('jwt')
+  @Query(() => [Deliveries])
+  public async getAllDeliveryForOneUser(
+    @UserRequest('id') userId: string
+  ): Promise<Deliveries[]> {
+    const deliveries = await this.deliveryService.getDeliveriesForOneUser(
+      userId
+    )
 
     return deliveries
   }
@@ -39,6 +54,17 @@ export class DeliveriesResolver {
     })
 
     return accept
+  }
+
+  @Mutation(() => Deliveries)
+  public async cancelDelivery(
+    @Args('deliveryId', ParseUUIDPipe) deliveryId: string
+  ): Promise<Deliveries> {
+    const CancelledDelivery = await this.deliveryService.cancelDelivery(
+      deliveryId
+    )
+
+    return CancelledDelivery
   }
 
   @Mutation(() => Deliveries)

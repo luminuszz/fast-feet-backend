@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { UsersRepository } from './repositories/usersRepository'
 import { HashModuleProvider } from '../../shared/providers/hash/hash.module'
 import { UserSchema } from './schemas/user.schema'
+import { ResetNumberOfDeliveryTask } from './tasks/resetNumberOfDelivery'
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { UserSchema } from './schemas/user.schema'
     TypeOrmModule.forFeature([UserSchema], 'mongo'),
     HashModuleProvider,
   ],
-  providers: [UsersService, UsersResolver],
+  providers: [UsersService, UsersResolver, ResetNumberOfDeliveryTask],
   exports: [UsersService],
 })
 export class UsersModule {}
