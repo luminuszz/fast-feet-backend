@@ -28,6 +28,8 @@ export class AuthService {
       findUser.password
     )
 
+    console.log(validPassword)
+
     if (!validPassword) {
       return null
     }

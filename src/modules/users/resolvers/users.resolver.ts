@@ -8,10 +8,11 @@ import { Role } from 'src/modules/auth/decorators/role.decorator'
 import { RoleGuard } from 'src/modules/auth/guards/role.guard'
 
 @Resolver(() => User)
-@UseGuards(GqlAuthGuard, RoleGuard)
+@UseGuards(RoleGuard)
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
+  @UseGuards(GqlAuthGuard)
   @Query(() => [User])
   @Role('Admin')
   public async getAllUsers(): Promise<User[]> {
@@ -20,6 +21,7 @@ export class UsersResolver {
     return users
   }
 
+  @UseGuards(GqlAuthGuard)
   @Mutation(() => User)
   @Role('Admin')
   public async createUser(
@@ -34,7 +36,7 @@ export class UsersResolver {
   public async createDeliveryMan(
     @Args('createUser') data: CreateUserDTO
   ): Promise<User> {
-    const newUSer = await this.usersService.createUser(data)
+    const newUSer = await this.usersService.createDeliveryMan(data)
 
     return newUSer
   }

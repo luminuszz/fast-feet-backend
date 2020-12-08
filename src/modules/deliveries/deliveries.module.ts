@@ -6,6 +6,7 @@ import { DeliveriesResolver } from './resolvers/deliveries.resolver'
 import { UsersModule } from '../users/users.module'
 import { UploadModule } from 'src/shared/providers/upload/upload.module'
 import { DeliveryController } from './controllers/deliveries.controller'
+import { ListenerDeliveryEvent } from './events/finishDelivery.event'
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { DeliveryController } from './controllers/deliveries.controller'
     UsersModule,
     UploadModule,
   ],
-  providers: [DeliveriesService, DeliveriesResolver],
+  providers: [DeliveriesService, DeliveriesResolver, ListenerDeliveryEvent],
   controllers: [DeliveryController],
 })
 export class DeliveriesModule {}

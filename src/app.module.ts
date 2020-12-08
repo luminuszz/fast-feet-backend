@@ -4,30 +4,28 @@ import { AppService } from './app.service'
 import { UsersModule } from './modules/users/users.module'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { GraphQLModule } from '@nestjs/graphql'
-import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core'
+import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core'
 import { ClassValidatorPipe } from './shared/pipes/classValidator.pipe'
 import { AuthModule } from './modules/auth/auth.module'
-import envVariables from './config/envVariables'
 import { ConfigModule } from '@nestjs/config'
 import { DeliveriesModule } from './modules/deliveries/deliveries.module'
-import { formatterErrors } from './shared/errors/exeption.filter'
+import { EventEmitterModule } from '@nestjs/event-emitter'
+import { mongoConnection, pgConnection } from './config/connections'
+import {
+  configModule,
+  eventEmitterConfig,
+  gqlModuleConfig,
+} from './config/modulesConfig'
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: '.env',
-      load: [envVariables],
-    }),
-    UsersModule,
+    ConfigModule.forRoot(configModule),
+    TypeOrmModule.forRoot(mongoConnection),
+    TypeOrmModule.forRoot(pgConnection),
     TypeOrmModule.forRoot(),
-    GraphQLModule.forRoot({
-      autoSchemaFile: true,
-      playground: true,
-      context: ({ req }) => ({ req }),
-      formatError: formatterErrors,
-    }),
-
+    GraphQLModule.forRoot(gqlModuleConfig),
+    EventEmitterModule.forRoot(eventEmitterConfig),
+    UsersModule,
     AuthModule,
     DeliveriesModule,
   ],

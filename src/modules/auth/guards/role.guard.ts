@@ -28,8 +28,6 @@ export class RoleGuard implements CanActivate {
 
     const user = ctx.getContext().req.user
 
-    console.log('role', currentRole)
-
     if (!currentRole) return true
 
     console.log(ctx.getContext().req.user)

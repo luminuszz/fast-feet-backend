@@ -24,7 +24,5 @@ export class CreateUserDTO {
   @Field()
   cpf: string
 
-  @IsNotEmpty()
-  @Field()
   role: UserRole
 }

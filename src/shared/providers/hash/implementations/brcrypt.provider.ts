@@ -10,8 +10,8 @@ export class BcryptHashProvider implements IHashProvider {
     return newHash
   }
 
-  public compareHash(data: string, dataHash: string): Promise<boolean> {
-    const compareHash = compare(data, dataHash)
+  public async compareHash(data: string, dataHash: string): Promise<boolean> {
+    const compareHash = await compare(data, dataHash)
 
     return compareHash
   }

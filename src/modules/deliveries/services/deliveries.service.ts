@@ -10,6 +10,7 @@ import { Deliveries } from '../entities/deliveries.entity'
 import { DeliveriesRepository } from '../repositories/deliveries.repository'
 import { getHours } from 'date-fns'
 import { UploadService } from 'src/shared/providers/upload/upload.service'
+import { EventEmitter2 } from '@nestjs/event-emitter'
 
 interface IFinishDeliveryParams {
   deliveryId: string
@@ -21,7 +22,8 @@ export class DeliveriesService {
   constructor(
     private readonly deliversRepository: DeliveriesRepository,
     private readonly usersService: UsersService,
-    private readonly uploadService: UploadService
+    private readonly uploadService: UploadService,
+    private readonly eventEmitter: EventEmitter2
   ) {}
 
   public async createDelivery(
@@ -96,9 +98,13 @@ export class DeliveriesService {
       throw new UnauthorizedException('This delivery should to accept first')
     }
 
+    await this.usersService.incrementNumberOfDeliveries(foundedDeliveryMain.id)
+
     foundedDelivery.endDate = new Date()
 
     await this.deliversRepository.save(foundedDelivery)
+
+    this.eventEmitter.emit('delivery.finish', { user: foundedDeliveryMain })
 
     return foundedDelivery
   }
