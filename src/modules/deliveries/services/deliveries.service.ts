@@ -12,6 +12,7 @@ import { getHours } from 'date-fns'
 import { UploadService } from 'src/shared/providers/upload/upload.service'
 import { EventEmitter2 } from '@nestjs/event-emitter'
 import { IsNull } from 'typeorm'
+import { NotificationsService } from 'src/modules/notifications/services/notifications.service'
 
 interface IFinishDeliveryParams {
   deliveryId: string
@@ -30,7 +31,8 @@ export class DeliveriesService {
     private readonly deliversRepository: DeliveriesRepository,
     private readonly usersService: UsersService,
     private readonly uploadService: UploadService,
-    private readonly eventEmitter: EventEmitter2
+    private readonly eventEmitter: EventEmitter2,
+    private readonly notificationService: NotificationsService
   ) {
     this.currentDate = new Date()
   }
@@ -61,12 +63,12 @@ export class DeliveriesService {
     deliveryId,
     deliveryManId,
   }: AcceptDeliveryDTO): Promise<Deliveries> {
-    if (getHours(this.currentDate) < 8 || getHours(this.currentDate) > 12) {
+    /*  if (getHours(this.currentDate) < 8 || getHours(this.currentDate) > 12) {
       throw new UnauthorizedException(
         'You can only accept delivery from 8am to 12pm'
       )
     }
-
+ */
     const currentDeliveryMain = await this.usersService.findOneUser({
       column: 'id',
       value: deliveryManId,
@@ -96,6 +98,8 @@ export class DeliveriesService {
     currentDelivery.startDate = this.currentDate
 
     await this.deliversRepository.save(currentDelivery)
+
+    this.notificationService.sendEmailNotification()
 
     return currentDelivery
   }
