@@ -43,9 +43,10 @@ export class DeliveriesResolver {
     return deliveries
   }
 
+  @Auth('jwt')
   @Mutation(() => Deliveries)
   public async acceptDelivery(
-    @Args('deliveryId', new ParseUUIDPipe()) deliveryId: string,
+    @Args('deliveryId', ParseUUIDPipe) deliveryId: string,
     @UserRequest() user: User
   ): Promise<Deliveries> {
     const accept = await this.deliveryService.acceptDelivery({

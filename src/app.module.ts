@@ -16,7 +16,10 @@ import {
   configModule,
   eventEmitterConfig,
   gqlModuleConfig,
+  bullModuleConfig,
 } from './config/modulesConfig'
+import { NotificationsModule } from './modules/notifications/notifications.module'
+import { BullModule } from '@nestjs/bull'
 
 @Module({
   imports: [
@@ -26,10 +29,12 @@ import {
     TypeOrmModule.forRoot(),
     GraphQLModule.forRoot(gqlModuleConfig),
     EventEmitterModule.forRoot(eventEmitterConfig),
+    BullModule.forRoot(bullModuleConfig),
     ScheduleModule.forRoot(),
     UsersModule,
     AuthModule,
     DeliveriesModule,
+    NotificationsModule,
   ],
   controllers: [AppController],
   providers: [
