@@ -13,6 +13,7 @@ import { UploadService } from 'src/shared/providers/upload/upload.service'
 import { EventEmitter2 } from '@nestjs/event-emitter'
 import { IsNull } from 'typeorm'
 import { NotificationsService } from 'src/modules/notifications/services/notifications.service'
+import { deliveryEventKey } from '../events/finishDelivery.event'
 
 interface IFinishDeliveryParams {
   deliveryId: string
@@ -63,12 +64,12 @@ export class DeliveriesService {
     deliveryId,
     deliveryManId,
   }: AcceptDeliveryDTO): Promise<Deliveries> {
-    /*  if (getHours(this.currentDate) < 8 || getHours(this.currentDate) > 12) {
+    if (getHours(this.currentDate) < 8 || getHours(this.currentDate) > 12) {
       throw new UnauthorizedException(
         'You can only accept delivery from 8am to 12pm'
       )
     }
- */
+
     const currentDeliveryMain = await this.usersService.findOneUser({
       column: 'id',
       value: deliveryManId,
@@ -122,6 +123,8 @@ export class DeliveriesService {
     deliveryId,
     deliveryManId,
   }: IFinishDeliveryParams): Promise<Deliveries> {
+    console.log(deliveryId, deliveryManId)
+
     const foundedDelivery = await this.deliversRepository.findOne(deliveryId)
 
     const foundedDeliveryMain = await this.usersService.findOneUser({
@@ -137,13 +140,13 @@ export class DeliveriesService {
       throw new UnauthorizedException('This delivery should to accept first')
     }
 
-    await this.usersService.incrementNumberOfDeliveries(foundedDeliveryMain.id)
-
     foundedDelivery.endDate = new Date()
 
     await this.deliversRepository.save(foundedDelivery)
 
-    this.eventEmitter.emit('delivery.finish', { user: foundedDeliveryMain })
+    this.eventEmitter.emit(deliveryEventKey.finish, {
+      id: foundedDeliveryMain.id,
+    })
 
     return foundedDelivery
   }
