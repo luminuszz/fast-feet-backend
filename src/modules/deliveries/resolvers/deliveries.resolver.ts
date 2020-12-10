@@ -5,7 +5,6 @@ import { DeliveriesService } from '../services/deliveries.service'
 import { createDeliveryInputDTO } from '../dtos/createDeliver.dto'
 import { Deliveries } from '../entities/deliveries.entity'
 import { UserRequest } from 'src/modules/auth/decorators/user.decorator'
-import { User } from 'src/modules/users/entities/user.entity'
 import { Auth } from 'src/modules/auth/decorators/auth.decorator'
 
 @Resolver(() => Deliveries)
@@ -47,10 +46,10 @@ export class DeliveriesResolver {
   @Mutation(() => Deliveries)
   public async acceptDelivery(
     @Args('deliveryId', ParseUUIDPipe) deliveryId: string,
-    @UserRequest() user: User
+    @UserRequest('id') userId: string
   ): Promise<Deliveries> {
     const accept = await this.deliveryService.acceptDelivery({
-      deliveryManId: user.id,
+      deliveryManId: userId,
       deliveryId,
     })
 
@@ -68,6 +67,7 @@ export class DeliveriesResolver {
     return CancelledDelivery
   }
 
+  @Auth('jwt')
   @Mutation(() => Deliveries)
   public async finishDelivery(
     @Args('deliveryId', ParseUUIDPipe) deliveryId: string,
