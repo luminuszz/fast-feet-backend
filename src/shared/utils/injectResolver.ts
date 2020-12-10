@@ -1,17 +1,18 @@
-import { Provider } from '@nestjs/common'
+import { Abstract, Provider, Type } from '@nestjs/common'
 import envVar, { nodeEnv } from '../../config/envVariables'
 
-type state = {
-  development: any
-  production: any
+type AbstractType<T = unknown> = string | symbol | Type<T> | Abstract<T>
+
+type state<T> = {
+  development: Type<T>
+  production: Type<T>
 }
 
 export function injectResolver(
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  abstraction: Function,
-  { development, production }: state
+  abstraction: AbstractType,
+  { development, production }: state<unknown>
 ): Provider {
-  const provide = String(abstraction.name)
+  const provide = abstraction
 
   switch (envVar().nodeEnv) {
     case nodeEnv.development:

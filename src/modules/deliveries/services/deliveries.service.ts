@@ -78,14 +78,14 @@ export class DeliveriesService {
     const currentDelivery = await this.deliversRepository.findOne({
       where: { id: deliveryId },
     })
-
+    /* 
     const isHaveDeliveryInDay = await this.usersService.verifyNumberOfDeliveries(
       currentDeliveryMain.id
     )
 
     if (!isHaveDeliveryInDay) {
       throw new UnauthorizedException("You already hit the day's delivery mate")
-    }
+    } */
 
     if (!currentDelivery) {
       throw new BadRequestException('delivery not found')
@@ -100,7 +100,10 @@ export class DeliveriesService {
 
     await this.deliversRepository.save(currentDelivery)
 
-    this.notificationService.sendEmailNotification()
+    this.notificationService.sendEmailNotification({
+      email: currentDeliveryMain.email,
+      name: currentDeliveryMain.name,
+    })
 
     return currentDelivery
   }
